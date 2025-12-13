@@ -10,49 +10,87 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            /* 深紫色渐变背景 */
+            /* 1. 改为深紫色渐变背景 */
             background: radial-gradient(circle at center, #4a1e60 0%, #1a0b2e 80%, #000000 100%);
             overflow: hidden;
             display: flex;
             perspective: 1000px;
             transform-style: preserve-3d;
             height: 100vh;
+            font-family: 'Noto Serif SC', serif; /* 使用宋体风格，更优雅 */
+        }
+
+        /* ====== [新增] 开场遮罩样式 START ====== */
+        #start-mask {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* 遮罩背景：使用一个稍微亮一点的紫色渐变，区分主背景 */
+            background: linear-gradient(135deg, #2a0845 0%, #6441A5 100%);
+            z-index: 9999; /* 确保在最顶层，挡住所有内容 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease; /* 设置淡出动画时间为1.5秒 */
+        }
+        
+        #start-mask h1 {
+            color: #fff;
+            font-family: 'Dancing Script', cursive; /* 使用漂亮的英文手写体 */
+            font-size: 3.5rem;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 0 20px;
+            animation: breathe 3s infinite ease-in-out; /* 增加一个呼吸灯效果 */
+        }
+
+        #start-button {
+            padding: 12px 40px;
+            border: 2px solid rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
             font-family: 'Noto Serif SC', serif;
         }
-
-        /* 1. 中心动漫人物 (独立样式) */
-        .center-anime {
-            position: fixed; 
-            top: 50%; 
-            left: 50%;
-            transform: translate(-50%, -50%); 
-            width: 80px;  
-            height: 80px; 
-            z-index: 2000; 
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)); 
-            pointer-events: none; 
+        
+        #start-button:active {
+            transform: scale(0.95); /* 点击时的微缩效果 */
+            background: rgba(255,255,255,0.3);
         }
+        
+        /* 开场文字的呼吸动画 */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        /* ====== [新增] 开场遮罩样式 END ====== */
 
-        /* 萤火虫特效 */
+
+        /* 萤火虫/星光特效 */
         .firefly {
             position: absolute;
-            width: 4px; height: 4px;
-            background-color: #d8bfd8;
+            width: 4px;
+            height: 4px;
+            background-color: #d8bfd8; /* 淡紫色光点 */
             border-radius: 50%;
             box-shadow: 0 0 10px #d8bfd8, 0 0 20px #e6e6fa;
             animation: fly 10s linear infinite;
             opacity: 0;
-            z-index: 1;
         }
 
-        /* 3D 容器 */
         #drag-container {
             position: relative;
             display: flex;
             margin: auto;
             transform-style: preserve-3d;
             transform: rotateX(-10deg);
-            touch-action: none;
         }
 
         #spin-container {
@@ -62,23 +100,37 @@
             transform-style: preserve-3d;
             width: 120px;
             height: 170px;
-            animation: spinRevert 25s infinite linear;
+            animation: spinRevert 25s infinite linear; /* 转慢一点，更优雅 */
         }
 
-        /* 照片样式 */
         #spin-container img {
             transform-style: preserve-3d;
             position: absolute;
             left: 0; top: 0;
             width: 100%; height: 100%;
             object-fit: cover;
+            /* 2. 照片边框改为拍立得风格 + 紫色光晕 */
             border: 5px solid #fff; 
-            border-bottom: 20px solid #fff;
-            box-shadow: 0 0 15px rgba(216, 191, 216, 0.6);
+            border-bottom: 20px solid #fff; /* 底部留白像拍立得 */
+            box-shadow: 0 0 15px rgba(216, 191, 216, 0.6); /* 紫色光晕 */
             border-radius: 4px;
         }
 
-        /* 地板光圈 */
+        /* 中心动漫人物 */
+        #spin-container .center-anime {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(0deg);
+            width: 100px; height: 100px;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            /* 给动漫人物加一点神圣的光 */
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+            /*animation: float 4s ease-in-out infinite;*/
+        }
+
+        /* 地板光圈 - 紫色系 */
         #ground {
             width: 900px; height: 900px;
             position: absolute;
@@ -87,17 +139,21 @@
             background: -webkit-radial-gradient(center center, farest-side, rgba(147, 112, 219, 0.2), transparent);
         }
 
-        /* 文字区域 */
+        /* 底部文字区域 */
         #text-container {
             position: absolute;
-            bottom: 30px; left: 0; width: 100%;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
             text-align: center;
-            color: #e6e6fa;
+            color: #e6e6fa; /* 淡紫色字 */
             z-index: 100;
-            pointer-events: none;
+            pointer-events: none; /* 防止遮挡点击 */
         }
+        
+        /* 3. 字体样式升级 */
         .english-font {
-            font-family: 'Dancing Script', cursive;
+            font-family: 'Dancing Script', cursive; /* 手写体 */
             font-size: 2.5rem;
             margin-bottom: 10px;
             text-shadow: 0 0 10px #9370db;
@@ -109,39 +165,58 @@
             font-weight: 300;
         }
 
-        /* --- 新增：网易云播放器容器样式 --- */
-        #netease-player {
+        /* 4. 音乐播放按钮 */
+        .music-btn {
             position: fixed;
-            top: 10px;
-            right: 10px; /* 固定在右上角 */
-            z-index: 3000; /* 保证在最上层，可以被点击 */
-            opacity: 0.9;
-            /* 手机屏幕小，稍微缩小一点比例，防止遮挡太多 */
-            transform: scale(0.8); 
-            transform-origin: top right;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            animation: rotateMusic 5s linear infinite;
+            animation-play-state: paused; /* 默认暂停 */
+        }
+        .music-btn.playing {
+            animation-play-state: running;
+            background: rgba(255, 255, 255, 0.5);
         }
 
         /* 动画关键帧 */
         @keyframes spinRevert { from { transform: rotateY(360deg); } to{ transform: rotateY(0deg); } }
+        @keyframes float { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-15px); } }
         @keyframes fly { 
             0% { transform: translateY(100vh) scale(0); opacity: 0; } 
             50% { opacity: 1; } 
             100% { transform: translateY(-100px) scale(1); opacity: 0; } 
         }
+        @keyframes rotateMusic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
 
-    <img class="center-anime" src="./anime.png" alt="us">
-
+    <div id="start-mask">
+        <h1>To My Beloved Wife</h1>
+        <button id="start-button" onclick="startJourney()">点击开启惊喜 ❤️</button>
+    </div>
     <div id="fireflies"></div>
 
-    <div id="netease-player">
-        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=2097826775&auto=1&height=66"></iframe>
-    </div>
+    <div class="music-btn" onclick="toggleMusic()">🎵</div>
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="drag-container">
         <div id="spin-container">
+            <img class="center-anime" src="./anime.png" alt="us">
+
             <img src="./1.jpg" alt="">
             <img src="./2.jpg" alt="">
             <img src="./3.jpg" alt="">
@@ -158,7 +233,32 @@
     </div>
 
     <script>
-        // 1. 生成萤火虫
+        // ====== [新增] 开场遮罩交互逻辑 START ======
+        function startJourney() {
+            var mask = document.getElementById('start-mask');
+            var audio = document.getElementById("bg-music");
+            var btn = document.querySelector(".music-btn");
+
+            // 1. 开始淡出遮罩层
+            mask.style.opacity = '0'; 
+            
+            // 2. 尝试播放音乐（利用用户的点击动作触发播放）
+            audio.play().then(() => {
+                // 如果播放成功，让音乐按钮转起来
+                btn.classList.add("playing");
+            }).catch(error => {
+                console.log("Autoplay prevented by browser, user needs to interact.");
+            });
+
+            // 3. 动画结束后（1.5秒后），把遮罩层完全移除，这样就能操作下面的3D相册了
+            setTimeout(function() {
+                mask.style.display = 'none';
+            }, 1500); // 这里的 1500ms 对应 CSS 里的 transition 1.5s
+        }
+        // ====== [新增] 开场遮罩交互逻辑 END ======
+
+
+        // ====== 1. 生成萤火虫背景 ======
         function createFireflies() {
             const container = document.getElementById('fireflies');
             for (let i = 0; i < 30; i++) {
@@ -172,9 +272,20 @@
         }
         createFireflies();
 
-        // (原来的 toggleMusic 函数已删除，因为网易云自带播放按钮)
+        // ====== 2. 音乐控制 ======
+        function toggleMusic() {
+            var audio = document.getElementById("bg-music");
+            var btn = document.querySelector(".music-btn");
+            if (audio.paused) {
+                audio.play();
+                btn.classList.add("playing");
+            } else {
+                audio.pause();
+                btn.classList.remove("playing");
+            }
+        }
 
-        // 2. 3D 相册初始化
+        // ====== 3. 3D 相册逻辑 (保持不变) ======
         var radius = 240; 
         var imgWidth = 120; 
         var imgHeight = 170; 
@@ -183,7 +294,7 @@
         var obox = document.getElementById('drag-container');
         var ospin = document.getElementById('spin-container');
         var aImg = ospin.getElementsByTagName('img');
-        var aEle = [...aImg]; 
+        var aEle = [...aImg].filter(img => !img.classList.contains('center-anime'));
 
         ospin.style.width = imgWidth + "px";
         ospin.style.height = imgHeight + "px";
@@ -196,9 +307,9 @@
             }
         }
 
-        // 3. 日期计算
+        // ====== 4. 日期计算 ======
         function showTime() {
-            var startTime = new Date("2024-01-20"); // ⚠️ 记得确认你的纪念日
+            var startTime = new Date("2024-01-20"); // ⚠️ 改这里
             var now = new Date();
             var duration = now - startTime;
             var days = Math.floor(duration / (1000 * 60 * 60 * 24));
@@ -206,12 +317,11 @@
         }
         showTime();
 
-        // 4. 拖拽交互逻辑
+        // ====== 5. 拖拽逻辑 (保持不变) ======
         document.onpointerdown = function (e) {
             clearInterval(obox.timer);
             e = e || window.event;
             var sX = e.clientX, sY = e.clientY;
-            
             this.onpointermove = function (e) {
                 e = e || window.event;
                 var nX = e.clientX, nY = e.clientY;
@@ -220,7 +330,6 @@
                 applyTransform(obox);
                 sX = nX; sY = nY;
             };
-
             this.onpointerup = function (e) {
                 this.onpointermove = this.onpointerup = null;
                 obox.timer = setInterval(function () {
@@ -236,7 +345,6 @@
             };
             return false;
         };
-
         var tX = 0, tY = 10, desX = 0, desY = 0;
         function applyTransform(obj) {
             if(tY > 180) tY = 180;
