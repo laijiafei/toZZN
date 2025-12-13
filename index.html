@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>结婚纪念日快乐</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Serif+SC:wght@300;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            /* 1. 改为深紫色渐变背景 */
+            background: radial-gradient(circle at center, #4a1e60 0%, #1a0b2e 80%, #000000 100%);
+            overflow: hidden;
+            display: flex;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            height: 100vh;
+            font-family: 'Noto Serif SC', serif; /* 使用宋体风格，更优雅 */
+        }
+
+        /* 萤火虫/星光特效 */
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #d8bfd8; /* 淡紫色光点 */
+            border-radius: 50%;
+            box-shadow: 0 0 10px #d8bfd8, 0 0 20px #e6e6fa;
+            animation: fly 10s linear infinite;
+            opacity: 0;
+        }
+
+        #drag-container {
+            position: relative;
+            display: flex;
+            margin: auto;
+            transform-style: preserve-3d;
+            transform: rotateX(-10deg);
+        }
+
+        #spin-container {
+            position: relative;
+            display: flex;
+            margin: auto;
+            transform-style: preserve-3d;
+            width: 120px;
+            height: 170px;
+            animation: spinRevert 25s infinite linear; /* 转慢一点，更优雅 */
+        }
+
+        #spin-container img {
+            transform-style: preserve-3d;
+            position: absolute;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            /* 2. 照片边框改为拍立得风格 + 紫色光晕 */
+            border: 5px solid #fff; 
+            border-bottom: 20px solid #fff; /* 底部留白像拍立得 */
+            box-shadow: 0 0 15px rgba(216, 191, 216, 0.6); /* 紫色光晕 */
+            border-radius: 4px;
+        }
+
+        /* 中心动漫人物 */
+        #spin-container .center-anime {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(0deg);
+            width: 100px; height: 100px;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            /* 给动漫人物加一点神圣的光 */
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+            /*animation: float 4s ease-in-out infinite;*/
+        }
+
+        /* 地板光圈 - 紫色系 */
+        #ground {
+            width: 900px; height: 900px;
+            position: absolute;
+            top: 100%; left: 50%;
+            transform: translate(-50%, -50%) rotateX(90deg);
+            background: -webkit-radial-gradient(center center, farest-side, rgba(147, 112, 219, 0.2), transparent);
+        }
+
+        /* 底部文字区域 */
+        #text-container {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #e6e6fa; /* 淡紫色字 */
+            z-index: 100;
+            pointer-events: none; /* 防止遮挡点击 */
+        }
+        
+        /* 3. 字体样式升级 */
+        .english-font {
+            font-family: 'Dancing Script', cursive; /* 手写体 */
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #9370db;
+        }
+        .chinese-font {
+            font-size: 1rem;
+            letter-spacing: 2px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* 4. 音乐播放按钮 */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            animation: rotateMusic 5s linear infinite;
+            animation-play-state: paused; /* 默认暂停 */
+        }
+        .music-btn.playing {
+            animation-play-state: running;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 动画关键帧 */
+        @keyframes spinRevert { from { transform: rotateY(360deg); } to{ transform: rotateY(0deg); } }
+        @keyframes float { 0%, 100% { transform: translate(-50%, -50%) translateY(0); } 50% { transform: translate(-50%, -50%) translateY(-15px); } }
+        @keyframes fly { 
+            0% { transform: translateY(100vh) scale(0); opacity: 0; } 
+            50% { opacity: 1; } 
+            100% { transform: translateY(-100px) scale(1); opacity: 0; } 
+        }
+        @keyframes rotateMusic { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <div id="fireflies"></div>
+
+    <div class="music-btn" onclick="toggleMusic()">🎵</div>
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="drag-container">
+        <div id="spin-container">
+            <img class="center-anime" src="./anime.png" alt="us">
+
+            <img src="./1.jpg" alt="">
+            <img src="./2.jpg" alt="">
+            <img src="./3.jpg" alt="">
+            <img src="./4.jpg" alt="">
+            <img src="./5.jpg" alt="">
+            <img src="./6.jpg" alt="">
+        </div>
+        <div id="ground"></div>
+    </div>
+
+    <div id="text-container">
+        <div class="english-font">Happy Anniversary, My Love</div>
+        <p class="chinese-font" id="time-count">我们相爱 ...</p>
+    </div>
+
+    <script>
+        // ====== 1. 生成萤火虫背景 ======
+        function createFireflies() {
+            const container = document.getElementById('fireflies');
+            for (let i = 0; i < 30; i++) {
+                const fly = document.createElement('div');
+                fly.className = 'firefly';
+                fly.style.left = Math.random() * 100 + 'vw';
+                fly.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                fly.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(fly);
+            }
+        }
+        createFireflies();
+
+        // ====== 2. 音乐控制 ======
+        function toggleMusic() {
+            var audio = document.getElementById("bg-music");
+            var btn = document.querySelector(".music-btn");
+            if (audio.paused) {
+                audio.play();
+                btn.classList.add("playing");
+            } else {
+                audio.pause();
+                btn.classList.remove("playing");
+            }
+        }
+
+        // ====== 3. 3D 相册逻辑 (保持不变) ======
+        var radius = 240; 
+        var imgWidth = 120; 
+        var imgHeight = 170; 
+
+        setTimeout(init, 100);
+        var obox = document.getElementById('drag-container');
+        var ospin = document.getElementById('spin-container');
+        var aImg = ospin.getElementsByTagName('img');
+        var aEle = [...aImg].filter(img => !img.classList.contains('center-anime'));
+
+        ospin.style.width = imgWidth + "px";
+        ospin.style.height = imgHeight + "px";
+
+        function init(delayTime) {
+            for (var i = 0; i < aEle.length; i++) {
+                aEle[i].style.transform = "rotateY(" + (i * (360 / aEle.length)) + "deg) translateZ(" + radius + "px)";
+                aEle[i].style.transition = "transform 1s";
+                aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 4 + "s";
+            }
+        }
+
+        // ====== 4. 日期计算 ======
+        function showTime() {
+            var startTime = new Date("2024-01-20"); // ⚠️ 改这里
+            var now = new Date();
+            var duration = now - startTime;
+            var days = Math.floor(duration / (1000 * 60 * 60 * 24));
+            document.getElementById('time-count').innerText = `与你共度的第 ${days} 天`;
+        }
+        showTime();
+
+        // ====== 5. 拖拽逻辑 (保持不变) ======
+        document.onpointerdown = function (e) {
+            clearInterval(obox.timer);
+            e = e || window.event;
+            var sX = e.clientX, sY = e.clientY;
+            this.onpointermove = function (e) {
+                e = e || window.event;
+                var nX = e.clientX, nY = e.clientY;
+                desX = nX - sX; desY = nY - sY;
+                tX += desX * 0.1; tY += desY * 0.1;
+                applyTransform(obox);
+                sX = nX; sY = nY;
+            };
+            this.onpointerup = function (e) {
+                this.onpointermove = this.onpointerup = null;
+                obox.timer = setInterval(function () {
+                    desX *= 0.95; desY *= 0.95;
+                    tX += desX * 0.1; tY += desY * 0.1;
+                    applyTransform(obox);
+                    playSpin(false);
+                    if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
+                        clearInterval(obox.timer);
+                        playSpin(true);
+                    }
+                }, 17);
+            };
+            return false;
+        };
+        var tX = 0, tY = 10, desX = 0, desY = 0;
+        function applyTransform(obj) {
+            if(tY > 180) tY = 180;
+            if(tY < 0) tY = 0;
+            obj.style.transform = "rotateX(" + (-tY) + "deg) rotateY(" + (tX) + "deg)";
+        }
+        function playSpin(yes) {
+            ospin.style.animationPlayState = (yes ? 'running' : 'paused');
+        }
+    </script>
+</body>
+</html>
