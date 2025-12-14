@@ -200,12 +200,12 @@
         <div id="spin-container">
             <img class="center-anime" src="./anime.png" alt="us">
 
-            <img src="./1.jpg" data-text="那天阳光正好，就像遇见你的心情">
-            <img src="./2.jpg" data-text="你笑起来的样子，是我最美的风景">
-            <img src="./3.jpg" data-text="不管是晴天雨天，有你在就是好天">
-            <img src="./4.jpg" data-text="谢谢你，包容我的小脾气">
-            <img src="./5.jpg" data-text="这一路走来，辛苦了我的老婆大人">
-            <img src="./6.jpg" data-text="未来很长，我们要慢慢走">
+            <img src="./1.jpg" data-text="江边昏黄的路灯下，定格了我们最静谧的爱">
+            <img src="./2.jpg" data-text="那天阳光正好，和你嘴角上扬的弧度">
+            <img src="./3.jpg" data-text="那晚高举的酒杯，盛满了共度余生的承诺">
+            <img src="./4.jpg" data-text="迎接新生命的那天，老婆辛苦了">
+            <img src="./5.jpg" data-text="于是便懂得了所谓岁月静好的模样">
+            <img src="./6.jpg" data-text="未来很长，我们慢慢走">
             
         </div>
         <div id="ground"></div>
@@ -418,10 +418,11 @@
         }
 
         const loveWords = [
-            "与你共度的每一天，都是奇迹",
-            "两姓联姻，一堂缔约",
-            "良缘永结，匹配同称",
-            "Happy Anniversary, My Love ❤️"
+            "从 晨昏 到 日暮",
+            "从 心动 到 白头",
+            "与你共度的第 " + Math.floor((new Date() - new Date("2024-01-19")) / (1000 * 60 * 60 * 24)) + " 天",
+            "未来路很长",
+            "我们要一起 慢慢走 ❤️"
         ];
         const typeText = document.getElementById('type-text');
         let wordIndex = 0, charIndex = 0, isDeleting = false;
