@@ -192,21 +192,7 @@
             border-bottom: 20px solid #fff; /* 底部留白像拍立得 */
             box-shadow: 0 0 15px rgba(216, 191, 216, 0.6); /* 紫色光晕 */
             border-radius: 4px;
-            /* 移除CSS动画，改用JavaScript控制 */
-            transition: transform 0.3s ease, opacity 0.3s ease;
         }
-    
-        /* 移除photoBreathe动画关键帧 */
-        /* @keyframes photoBreathe {
-            0%, 100% { 
-                transform: rotateY(var(--rotate-y)) translateZ(var(--translate-z)) scale(1);
-                opacity: 0.9;
-            }
-            50% { 
-                transform: rotateY(var(--rotate-y)) translateZ(var(--translate-z)) scale(1.05);
-                opacity: 1;
-            }
-        } */
 
         /* 中心动漫人物 */
         #spin-container .center-anime {
@@ -434,84 +420,28 @@
             }
         }
 
-        // ====== 3. 3D 相册逻辑 (修改版) ======
+        // ====== 3. 3D 相册逻辑 (保持不变) ======
         var radius = 240; 
         var imgWidth = 120; 
         var imgHeight = 170; 
-        var breatheTimer = null;
-    
+
         setTimeout(init, 100);
         var obox = document.getElementById('drag-container');
         var ospin = document.getElementById('spin-container');
         var aImg = ospin.getElementsByTagName('img');
         var aEle = [...aImg].filter(img => !img.classList.contains('center-anime'));
-    
+
         ospin.style.width = imgWidth + "px";
         ospin.style.height = imgHeight + "px";
-    
+
         function init(delayTime) {
             for (var i = 0; i < aEle.length; i++) {
                 aEle[i].style.transform = "rotateY(" + (i * (360 / aEle.length)) + "deg) translateZ(" + radius + "px)";
                 aEle[i].style.transition = "transform 1s";
                 aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 4 + "s";
             }
-            
-            // 启动呼吸效果
-            startBreatheEffect();
         }
-    
-        // 呼吸效果函数
-        function startBreatheEffect() {
-            if (breatheTimer) clearInterval(breatheTimer);
-            
-            let scale = 1;
-            let direction = 0.001; // 缩放方向
-            let opacity = 0.9;
-            let opacityDirection = 0.002;
-            
-            breatheTimer = setInterval(() => {
-                // 更新缩放和透明度
-                scale += direction;
-                opacity += opacityDirection;
-                
-                // 反转方向
-                if (scale >= 1.05) {
-                    direction = -0.001;
-                } else if (scale <= 1.0) {
-                    direction = 0.001;
-                }
-                
-                if (opacity >= 1.0) {
-                    opacityDirection = -0.002;
-                } else if (opacity <= 0.9) {
-                    opacityDirection = 0.002;
-                }
-                
-                // 应用到所有照片
-                aEle.forEach(img => {
-                    const currentTransform = img.style.transform;
-                    // 保持原有的旋转和位移，只修改缩放
-                    const newTransform = currentTransform.replace(/scale\([^)]*\)/, '') + ` scale(${scale.toFixed(3)})`;
-                    img.style.transform = newTransform;
-                    img.style.opacity = opacity;
-                });
-            }, 50); // 每50ms更新一次，实现平滑动画
-        }
-    
-        // 在拖拽时暂停呼吸效果
-        function pauseBreatheEffect() {
-            if (breatheTimer) {
-                clearInterval(breatheTimer);
-                breatheTimer = null;
-            }
-        }
-    
-        // 恢复呼吸效果
-        function resumeBreatheEffect() {
-            if (!breatheTimer) {
-                startBreatheEffect();
-            }
-        }
+
         // ====== 4. 日期计算 ======
         function showTime() {
             var startTime = new Date("2024-01-20"); // ⚠️ 改这里
@@ -522,11 +452,9 @@
         }
         showTime();
 
-        // ====== 5. 拖拽逻辑 (修改版) ======
+        // ====== 5. 拖拽逻辑 (保持不变) ======
         document.onpointerdown = function (e) {
             clearInterval(obox.timer);
-            pauseBreatheEffect(); // 暂停呼吸效果
-            
             e = e || window.event;
             var sX = e.clientX, sY = e.clientY;
             this.onpointermove = function (e) {
@@ -547,7 +475,6 @@
                     if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
                         clearInterval(obox.timer);
                         playSpin(true);
-                        resumeBreatheEffect(); // 恢复呼吸效果
                     }
                 }, 17);
             };
